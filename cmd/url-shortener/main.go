@@ -31,8 +31,22 @@ func main() {
         log.Error("failed to init storage", sl.Err(err))
         os.Exit(1)
     }
+    
+    // id, err := storage.SaveURL("google.com", "google")
+    // if err != nil {
+    //     log.Error("failed to save url", sl.Err(err))
+    //     os.Exit(1)
+    // }
+    // log.Info("save url", slog.Int64("id", id))
+    //
+    // id2, err2 := storage.SaveURL("google.com", "google")
+    // if err2 != nil {
+    //     log.Error("failed to save url", sl.Err(err2))
+    //     os.Exit(1)
+    // }
+    // log.Info("save url", slog.Int64("id", id2))
 
-    _ = storage
+   _ = storage
 
     // TODO: init router: chi, chi render
 
