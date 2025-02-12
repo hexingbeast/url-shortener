@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"url-shortener/internal/storage"
 
@@ -42,9 +43,9 @@ func New(storagePath string) (*Storage, error) {
     return &Storage{db: db}, nil
 }
 
-// add save url in databast function 
+// add save url in database function 
 func (s *Storage) SaveURL(urlToSave string, alias string) (int64, error) {
-    const op = "storege.sqlite.SaveURL"
+    const op = "storage.sqlite.SaveURL"
 
     // prepare request
     stmt, err := s.db.Prepare("INSERT INTO url(url, alias) VALUES(?, ?)")
@@ -62,7 +63,7 @@ func (s *Storage) SaveURL(urlToSave string, alias string) (int64, error) {
         return 0, fmt.Errorf("%s: %w", op, err)
     }
 
-    // get last isert item id
+    // get last insert item id
     id, err := res.LastInsertId()
     if err != nil {
         return 0, fmt.Errorf("%s: failed to last inseert id: %w", op, err)
@@ -70,3 +71,29 @@ func (s *Storage) SaveURL(urlToSave string, alias string) (int64, error) {
     
     return id, nil
 }
+
+// add get url from database function 
+func (s *Storage) GetURL(alias string) (string, error) {
+    const op = "storage.sqlite.GetURL"
+
+    // prepare request
+    stmt, err := s.db.Prepare("SELECT u.url FROM url u WHERE u.alias = ?")
+    if err != nil {
+        return "", fmt.Errorf("%s: %w", op, err)
+    }
+
+    var resUrl string
+    // take alias and put it into request
+    // then write answer into resUrl
+    err = stmt.QueryRow(alias).Scan(&resUrl)
+    if err != nil {
+        if errors.Is(err, sql.ErrNoRows) {
+            return "", storage.ErrURLNotFound
+        }
+        return "", fmt.Errorf("%s: execute statment: %w", op, err)
+    }
+
+    return resUrl, nil
+}
+
+// TODO: func (s *Storage) DeleteURL(alias string) error

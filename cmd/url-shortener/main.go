@@ -31,12 +31,18 @@ func main() {
         log.Error("failed to init storage", sl.Err(err))
         os.Exit(1)
     }
-    
-    // id, err := storage.SaveURL("google.com", "google")
-    // if err != nil {
-    //     log.Error("failed to save url", sl.Err(err))
+    // code for DEBUG
+    // _, err1 := storage.SaveURL("google1.com", "google1")
+    // if err1 != nil {
+    //     log.Error("failed to save url", sl.Err(err1))
     //     os.Exit(1)
     // }
+    //
+    // url, err2 := storage.GetURL("google1")
+    // if err2 != nil {
+    //     log.Error("failed to get url", sl.Err(err2))
+    // }
+    // log.Info("get url ", slog.String("url", url))
     // log.Info("save url", slog.Int64("id", id))
     //
     // id2, err2 := storage.SaveURL("google.com", "google")
