@@ -4,6 +4,7 @@ import (
 	"log/slog"
 	"os"
 	"url-shortener/internal/config"
+	mwLogger "url-shortener/internal/http-server/middleware/logger"
 	"url-shortener/internal/lib/logger/sl"
 	"url-shortener/internal/storage/sqlite"
 
@@ -66,8 +67,11 @@ func main() {
 
     // middleware for adding requestId in our request(get it from chi dependency)
     router.Use(middleware.RequestID)
-    // middleware for adding logger(get it from chi dependency)
+    // middleware for adding logger(get it from chi dependency, default logger)
     router.Use(middleware.Logger)
+    // added custom middleware logger
+    // можно использовать вместо дефолтного логгера chi
+    router.Use(mwLogger.New(log))
 
     // TODO: run server
 }
