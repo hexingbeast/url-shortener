@@ -1,12 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"log/slog"
 	"os"
 	"url-shortener/internal/config"
 	"url-shortener/internal/lib/logger/sl"
 	"url-shortener/internal/storage/sqlite"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 const (
@@ -18,12 +20,12 @@ const (
 func main() {
     // TODO: init config: cleanenv
     cfg := config.MustLoad()
-    fmt.Println(cfg)
+    // fmt.Println(cfg)
 
     // TODO: init logger: slog import from "log/slog"
     log := setupLogger(cfg.Env)
     log.Info("start url-shortener", slog.String("env", cfg.Env))
-    log.Debug("debug message are enable")
+    // log.Debug("debug message are enable")
 
     // TODO: init storage: sqlite
     storage, err := sqlite.New(cfg.StoragePath)
@@ -55,10 +57,22 @@ func main() {
    _ = storage
 
     // TODO: init router: chi, chi render
+    // create router
+    router := chi.NewRouter()
+
+    // connect to our router middleware
+    // middleware it is handler, can be chain of handlers
+    // last handler in chain, names request handler
+
+    // middleware for adding requestId in our request(get it from chi dependency)
+    router.Use(middleware.RequestID)
+    // middleware for adding logger(get it from chi dependency)
+    router.Use(middleware.Logger)
 
     // TODO: run server
 }
 
+// setup logger for different enviroments
 func setupLogger(env string) *slog.Logger {
     var log *slog.Logger
 
