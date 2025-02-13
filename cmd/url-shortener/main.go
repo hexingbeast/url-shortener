@@ -72,6 +72,12 @@ func main() {
     // added custom middleware logger
     // можно использовать вместо дефолтного логгера chi
     router.Use(mwLogger.New(log))
+    // если случилась паника внутри handler, не должны останавливать все приложение
+    // из-за ошибки в одном handler, восстанавливаем от паники
+    router.Use(middleware.Recoverer)
+    // надо для того чтобы писать красивые url при подключению к нашему handler
+    // привязан к пакету chi
+    router.Use(middleware.URLFormat)
 
     // TODO: run server
 }
