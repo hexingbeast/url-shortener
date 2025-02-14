@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"os"
 	"url-shortener/internal/config"
+	deleteurl "url-shortener/internal/http-server/handlers/delete"
+	"url-shortener/internal/http-server/handlers/redirect"
 	"url-shortener/internal/http-server/handlers/url/save"
 	mwLogger "url-shortener/internal/http-server/middleware/logger"
 	"url-shortener/internal/lib/logger/sl"
@@ -83,6 +85,8 @@ func main() {
 
     // добавляем handler для сохранения запроса
     router.Post("/url", save.New(log, storage))
+    router.Get("/{alias}", redirect.New(log, storage))
+    router.Delete("/{alias}", deleteurl.New(log, storage))
 
     // TODO: run server
     log.Info("starting server", slog.String("address", cfg.Address))
