@@ -18,7 +18,7 @@ import (
 type Request struct {
     // validate это надо для пакета валидации(validator/v10)
     // показывае что это поле reqired и url
-    URL string `json:"url" validate:"reqired,url"`
+    URL string `json:"url" validate:"required,url"`
     // omitempty этот параметр можно указать в strucTag json
     // если он есть и параметр alias не заполнен
     // то в место пустой строки параметра этого не будет
@@ -39,6 +39,7 @@ const aliasLength = 6
 
 // сигнатура этого метода должна быть такая же как у метода SaveURL в файле internal/storage/sqlite/sqlite.go 
 // так как наследует этот интерфейс
+//go:generate go run github.com/vektra/mockery/v2@v2.52.2 --name=URLSaver
 type URLSaver interface {
     SaveURL(urlToSave string, alias string) (int64, error)
 }
