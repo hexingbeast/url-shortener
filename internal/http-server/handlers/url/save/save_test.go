@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"log/slog"
 
 	"fmt"
 	"net/http"
@@ -60,9 +59,6 @@ func TestSaveHandler(t *testing.T) {
 
 	for _, tc := range cases {
 		tc := tc
-
-		
-		slog.Info("IIIIIIIIIIIIIIIIIIIIIII", slog.String("url", tc.url))
 
 		// TODO: узнать почему нельзя использовать переменную цикла
 		// когда запускаешь в отдельной го рутине
