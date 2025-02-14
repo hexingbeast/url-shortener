@@ -83,10 +83,24 @@ func main() {
     // привязан к пакету chi
     router.Use(middleware.URLFormat)
 
+    // для авторизации добавляем новый роутер
+    // в него помещаем handlers, для которых будет нужна авторизация 
+    router.Route("/url", func(r chi.Router) {
+        // BasicAuth идет в chi из коробки(претпологает оправку login и password в заголовке)
+        r.Use(middleware.BasicAuth("url-shortener", map[string]string{
+            cfg.HTTPServer.User: cfg.HTTPServer.Password,
+        }))
+        
+        // чтобы заработала авторизация, надо перенести роутеры сюда
+        // и меняем на внутренний роутер с "router" на "r"
+        r.Post("/", save.New(log, storage))
+        r.Delete("/{alias}", deleteurl.New(log, storage))
+    })
+
     // добавляем handler для сохранения запроса
-    router.Post("/url", save.New(log, storage))
+    // router.Post("/url", save.New(log, storage))
     router.Get("/{alias}", redirect.New(log, storage))
-    router.Delete("/{alias}", deleteurl.New(log, storage))
+    // router.Delete("url/{alias}", deleteurl.New(log, storage))
 
     // TODO: run server
     log.Info("starting server", slog.String("address", cfg.Address))

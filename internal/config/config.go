@@ -19,6 +19,12 @@ type HTTPServer struct {
     Address string `yaml:"address" env-default:"localhost:8082"`
     Timeout time.Duration `yaml:"timeout" env-default:"4s"`
     IdleTimeout time.Duration `yaml:"idle_timeout" env-default:"60s"`
+    // пользователь храниться в явном виде
+    User string `yaml:"user" env-required:"true"`
+    // пароль будет храниться в секретах на github
+    // переменная окружения HTTP_SERVER_PASSWORD должна быть записана полностью
+    // так как нету вложенности и нельзя в сруктуре Config написать HTTP_SERVER, а тут PASSWORD
+    Password string `yaml:"password" env-required:"true" env:"HTTP_SERVER_PASSWORD"`
 }
 
 
