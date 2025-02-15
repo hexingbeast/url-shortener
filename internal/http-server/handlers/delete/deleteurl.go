@@ -55,5 +55,6 @@ func New(log *slog.Logger, urlDeletter URLDeletter) http.HandlerFunc {
 		}
 
 		log.Info("url deleted")
+		w.WriteHeader(http.StatusNoContent)
 	}
 }

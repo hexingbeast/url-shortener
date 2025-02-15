@@ -106,6 +106,12 @@ func TestURLShortener_SaveRedirect(t *testing.T) {
 
 			testRedirect(t, alias, tc.url)
 
+			// Delete
+			e.DELETE("/url/{alias}").
+				WithPath("alias", resp.Value("alias")).
+				WithBasicAuth("myuser", "mypassword").
+				Expect().Status(http.StatusNoContent)
+
 			// TODO: add delete check
 		})
 	}
@@ -123,3 +129,4 @@ func testRedirect(t *testing.T, alias string, urlToRedirect string) {
 
 	require.Equal(t, urlToRedirect, redirectedToURL)
 }
+
